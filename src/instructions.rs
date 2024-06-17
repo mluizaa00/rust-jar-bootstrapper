@@ -5,7 +5,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 struct Instructions {
     pub instructions: Instruction,
-    pub s3_configuration: S3Configuration,
+    pub s3: S3Configuration,
 }
 
 #[derive(Debug, Deserialize)]
@@ -16,16 +16,8 @@ struct Instruction {
 
 #[derive(Debug, Deserialize)]
 pub struct S3Configuration {
-    pub credentials: S3ConfigurationCredentials,
     pub endpoint: String,
     pub modules: S3ModulesConfiguration,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct S3ConfigurationCredentials {
-    pub access_key_id: String,
-    pub access_key_secret: String,
-    pub region: String,
 }
 
 #[derive(Debug, Deserialize)]

@@ -1,6 +1,7 @@
 use aws_sdk_s3 as s3;
 use aws_sdk_s3::Client;
 use aws_sdk_s3::config::{Credentials, Region};
+use crate::credentials::S3ConfigurationCredentials;
 use crate::instructions::S3Configuration;
 
 #[derive(Clone, Debug)]
@@ -8,16 +9,19 @@ pub struct AppState {
     pub aws_client: Client,
 }
 
-pub async fn initialize_client(s3_configuration: S3Configuration) -> Result<AppState, s3::error> {
+pub async fn initialize_client(
+    s3_configuration: S3Configuration,
+    s3_credentials: S3ConfigurationCredentials,
+) -> Result<AppState, s3::error> {
     let credentials = Credentials::from_keys(
-        s3_configuration.credentials.access_key_id,
-        s3_configuration.credentials.access_key_secret,
+        s3_credentials.access_key_id,
+        s3_credentials.access_key_secret,
         None
     );
 
     let configuration = aws_config::from_env()
         .endpoint_url(s3_configuration.endpoint)
-        .region(Region::new(s3_configuration.credentials.region))
+        .region(Region::new(s3_credentials.region))
         .credentials_provider(credentials)
         .load()
         .await;

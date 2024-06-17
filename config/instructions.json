@@ -4,11 +4,6 @@
     "fileName": "module_one"
   },
   "s3": {
-    "credentials": {
-      "access_key_id": "",
-      "access_key_secret": "",
-      "region": "eu-west-2"
-    },
     "modules": {
       "bucket": "bootstraper_modules",
       "key": "module_1"
