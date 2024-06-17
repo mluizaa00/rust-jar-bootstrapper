@@ -12,6 +12,7 @@ pub struct S3ConfigurationCredentials {
     pub access_key_id: String,
     pub access_key_secret: String,
     pub region: String,
+    pub provider: String,
 }
 
 pub async fn load_credentials(

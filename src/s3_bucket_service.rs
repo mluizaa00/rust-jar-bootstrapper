@@ -12,11 +12,13 @@ pub struct AppState {
 pub async fn initialize_client(
     s3_configuration: S3Configuration,
     s3_credentials: S3ConfigurationCredentials,
-) -> Result<AppState, s3::error> {
-    let credentials = Credentials::from_keys(
+) -> Result<AppState, Err> {
+    let credentials = Credentials::new(
         s3_credentials.access_key_id,
         s3_credentials.access_key_secret,
-        None
+        None,
+        None,
+        &*s3_credentials.provider,
     );
 
     let configuration = aws_config::from_env()
@@ -38,16 +40,17 @@ pub async fn download_jar_from_s3(
     object_key: String
 ) -> Result<Vec<u8>, s3::Error> {
     let response = client
-        .put_object()
+        .get_object()
         .bucket(bucket_name)
         .key(object_key)
         .send()
         .await?;
 
-    let body = response.collect().await?.to_vec();
+    let body = response.body.collect().await
+        .expect("Unable to get response body");
 
     let mut downloaded_data = vec![];
-    let mut stream = body.unwrap();
+    let mut stream = body;
     while let Some(Ok(chunk)) = stream.next().await {
         downloaded_data.extend_from_slice(&chunk);
     }
