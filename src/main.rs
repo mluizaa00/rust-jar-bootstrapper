@@ -1,10 +1,10 @@
 mod s3_bucket_service;
-mod run_jar;
+mod module_service;
 mod instructions;
 
 use aws_sdk_s3 as s3;
 use s3_bucket_service::download_jar_from_s3;
-use run_jar::run;
+use module_service::run;
 use instructions::load_instructions;
 use crate::s3_bucket_service::initialize_client;
 
@@ -18,12 +18,12 @@ async fn main() -> Result<(), s3::Error> {
 
     let jar = download_jar_from_s3(
         state.aws_client,
-        Box::new(instructions.s3_configuration.bucket),
-        Box::new(instructions.s3_configuration.object_key)
+        instructions.s3_configuration.modules.bucket,
+        instructions.s3_configuration.modules.key
     ).await
         .expect("Unable to download jar from S3.");
 
-    run(jar, "file_name", "command").await
+    let command = run(jar, "jar_module", &instructions.instructions.boot_command).await
         .expect("Unable to run jar file.");
 
     Ok(())

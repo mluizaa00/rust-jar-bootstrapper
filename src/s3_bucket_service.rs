@@ -10,25 +10,28 @@ pub struct AppState {
 
 pub async fn initialize_client(s3_configuration: Box<S3Configuration>) -> Result<AppState, s3::error> {
     let credentials = Credentials::from_keys(
-        Box::new(s3_configuration.credentials.access_key_id),
-        Box::new(s3_configuration.credentials.access_key_secret),
+        s3_configuration.credentials.access_key_id,
+        s3_configuration.credentials.access_key_secret,
         None
     );
+
     let configuration = aws_config::from_env()
-        .endpoint_url(Box::new(s3_configuration.endpoint))
-        .region(Region::new("eu-west-2"))
+        .endpoint_url(s3_configuration.endpoint)
+        .region(Region::new(s3_configuration.credentials.region))
         .credentials_provider(credentials)
-        .load().await;
+        .load()
+        .await;
 
     let client = Client::new(&configuration);
     let state = AppState { aws_client: client };
+
     Ok(state)
 }
 
 pub async fn download_jar_from_s3(
     client: Client,
-    bucket_name: Box<str>,
-    object_key: Box<str>
+    bucket_name: String,
+    object_key: String
 ) -> Result<Vec<u8>, s3::Error> {
     let response = client
         .put_object()

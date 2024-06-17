@@ -8,8 +8,10 @@
       "access_key_secret": "",
       "region": "eu-west-2"
     },
-    "endpoint": "http://[bucket_name].s3.amazonaws.com/",
-    "bucket": "bootstraper_modules",
-    "objectKey": "module_1"
+    "modules": {
+      "bucket": "bootstraper_modules",
+      "key": "module_1"
+    },
+    "endpoint": "http://[bucket_name].s3.amazonaws.com/"
   }
 }
