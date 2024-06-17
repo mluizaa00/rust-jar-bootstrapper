@@ -1,0 +1,7 @@
+{
+  "instructions": {
+    "bootCommand": "java -jar {jar_name}",
+    "bucketName": "meubuckettop",
+    "objectKey": "meuobjectkeytop"
+  }
+}
