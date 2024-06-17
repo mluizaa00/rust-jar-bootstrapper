@@ -4,8 +4,8 @@ use std::process::Command;
 
 pub async fn run(
     jar_bytes: Vec<u8>,
-    file_name: &str,
-    jar_command: &str,
+    file_name: String,
+    jar_command: String,
 ) -> Result<Command, Box<dyn std::error::Error>> {
     let mut file = File::create(file_name)?;
     file.write_all(&jar_bytes)?;
@@ -18,7 +18,7 @@ pub async fn run(
 }
 
 async fn build_command(
-    command: &str,
+    command: String,
 ) -> Command {
     let command_args = command.split_whitespace().collect::<Vec<_>>();
     command_args.iter().fold(

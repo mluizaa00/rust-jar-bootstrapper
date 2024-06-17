@@ -11,6 +11,7 @@ struct Instructions {
 #[derive(Debug, Deserialize)]
 struct Instruction {
     pub boot_command: String,
+    pub file_name: String,
 }
 
 #[derive(Debug, Deserialize)]

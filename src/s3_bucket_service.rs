@@ -8,7 +8,7 @@ pub struct AppState {
     pub aws_client: Client,
 }
 
-pub async fn initialize_client(s3_configuration: Box<S3Configuration>) -> Result<AppState, s3::error> {
+pub async fn initialize_client(s3_configuration: S3Configuration) -> Result<AppState, s3::error> {
     let credentials = Credentials::from_keys(
         s3_configuration.credentials.access_key_id,
         s3_configuration.credentials.access_key_secret,

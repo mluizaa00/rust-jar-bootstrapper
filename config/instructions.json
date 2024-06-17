@@ -1,6 +1,7 @@
 {
   "instructions": {
-    "bootCommand": "java -jar {jar_name}"
+    "bootCommand": "java -jar {jar_name}",
+    "fileName": "module_one"
   },
   "s3": {
     "credentials": {
