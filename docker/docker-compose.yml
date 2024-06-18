@@ -1,0 +1,5 @@
+services:
+  rust-bootstrapper:
+    container_name: rust-jar-bootstrapper
+    ports:
+      - "8787:8787"
