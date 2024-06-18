@@ -3,7 +3,7 @@ use std::fs::read_to_string;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-struct Credentials {
+pub struct Credentials {
     pub s3: S3ConfigurationCredentials,
 }
 

@@ -10,50 +10,43 @@ pub struct AppState {
 }
 
 pub async fn initialize_client(
-    s3_configuration: S3Configuration,
+    s3_configuration: &S3Configuration,
     s3_credentials: S3ConfigurationCredentials,
-) -> Result<AppState, Err> {
+) -> AppState {
     let credentials = Credentials::new(
         s3_credentials.access_key_id,
         s3_credentials.access_key_secret,
         None,
         None,
-        &*s3_credentials.provider,
+        "rust-bootstrapper",
     );
 
     let configuration = aws_config::from_env()
-        .endpoint_url(s3_configuration.endpoint)
+        .endpoint_url(&s3_configuration.endpoint)
         .region(Region::new(s3_credentials.region))
         .credentials_provider(credentials)
         .load()
         .await;
 
     let client = Client::new(&configuration);
-    let state = AppState { aws_client: client };
-
-    Ok(state)
+    AppState { aws_client: client }
 }
 
-pub async fn download_jar_from_s3(
+pub async fn download_file_from_s3(
     client: Client,
-    bucket_name: String,
-    object_key: String
+    bucket_name: &String,
+    object_key: &String
 ) -> Result<Vec<u8>, s3::Error> {
     let response = client
         .get_object()
         .bucket(bucket_name)
         .key(object_key)
         .send()
-        .await?;
+        .await
+        .expect("Unable to get object on S3.");
 
-    let body = response.body.collect().await
-        .expect("Unable to get response body");
-
-    let mut downloaded_data = vec![];
-    let mut stream = body;
-    while let Some(Ok(chunk)) = stream.next().await {
-        downloaded_data.extend_from_slice(&chunk);
-    }
-
-    Ok(downloaded_data)
+    let bytes = response.body.collect().await
+        .expect("Unable to collect response body from S3.")
+        .into_bytes();
+    Ok(bytes.to_vec())
 }

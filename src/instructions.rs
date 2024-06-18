@@ -3,13 +3,13 @@ use std::fs::read_to_string;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-struct Instructions {
-    pub instructions: Instruction,
+pub struct Instructions {
+    pub boot: BootInstruction,
     pub s3: S3Configuration,
 }
 
 #[derive(Debug, Deserialize)]
-struct Instruction {
+pub struct BootInstruction {
     pub boot_command: String,
     pub file_name: String,
 }
