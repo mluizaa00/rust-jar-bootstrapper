@@ -1,0 +1,8 @@
+{
+  "s3": {
+    "instructions": {
+      "bucket": "bootstrapper-modules",
+      "key": "instructions.json"
+    }
+  }
+}

@@ -1,13 +1,8 @@
 {
   "instructions": {
+    "bucket": "bootstrapper-modules",
+    "key": "springboot.jar",
     "bootCommand": "java -jar {jar_name}",
     "fileName": "module_one"
-  },
-  "s3": {
-    "modules": {
-      "bucket": "bootstraper_modules",
-      "key": "module_1"
-    },
-    "endpoint": "http://[bucket_name].s3.amazonaws.com/"
   }
 }

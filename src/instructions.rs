@@ -1,36 +1,28 @@
 use serde_json::from_str;
-use std::fs::read_to_string;
+use std::str::from_utf8;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Instructions {
-    pub boot: BootInstruction,
-    pub s3: S3Configuration,
+    pub instructions: BootInstruction,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct BootInstruction {
+    #[serde(rename(deserialize = "bootCommand"))]
     pub boot_command: String,
+    #[serde(rename(deserialize = "fileName"))]
     pub file_name: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct S3Configuration {
-    pub endpoint: String,
-    pub modules: S3ModulesConfiguration,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct S3ModulesConfiguration {
     pub bucket: String,
     pub key: String,
 }
 
-pub async fn load_instructions(
-    file_path: &str
+pub async fn load_instruction_from_bytes(
+    bytes: &Vec<u8>
 ) -> Result<Instructions, Box<dyn std::error::Error>> {
-    let json_data = read_to_string(file_path)?;
-    let instructions = from_str(&json_data)?;
+    let json_stringify = from_utf8(&bytes)
+        .expect("Unable to translate bytes into UTF-8 string.");
 
+    let instructions = from_str(&json_stringify)?;
     Ok(instructions)
 }
