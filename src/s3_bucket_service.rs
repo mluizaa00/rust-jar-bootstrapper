@@ -1,7 +1,8 @@
 use aws_config::meta::region::RegionProviderChain;
 use aws_sdk_s3 as s3;
 use aws_sdk_s3::Client;
-use crate::bootable::{load_credentials, S3Instructions};
+use crate::boot_instruction::{BootInstruction, S3Instructions};
+use crate::file_service;
 
 #[derive(Clone, Debug)]
 pub struct AppState {
@@ -10,8 +11,9 @@ pub struct AppState {
 }
 
 pub async fn initialize_client() -> AppState {
-    let instructions = load_credentials("config/bootable.json").await
+    let boot_instruction = file_service::load_json_from_file::<BootInstruction>("config/bootable.json").await
         .expect("Unable to load credentials json.");
+
     let region_provider = RegionProviderChain::default_provider()
         .or_else("us-east-2");
     let config = aws_config::from_env()
@@ -21,7 +23,7 @@ pub async fn initialize_client() -> AppState {
     let client = Client::new(&config);
     println!("Initialized AWS client.");
 
-    AppState { aws_client: client, instructions: instructions.s3.instructions }
+    AppState { aws_client: client, instructions: boot_instruction.s3.instructions }
 }
 
 pub async fn download_file_from_s3(
